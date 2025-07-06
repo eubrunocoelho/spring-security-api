@@ -18,15 +18,22 @@ public class SecurityConfiguration {
 
     LoginUtilityService loginUtilityService;
 
+    public SecurityConfiguration(LoginUtilityService loginUtilityService) {
+        // Auto inject dependent beans
+        this.loginUtilityService = loginUtilityService;
+    }
+
     // Define SecurityFilterChain for API (Basic Authentication)
     @Bean
     @Order(1)
     public SecurityFilterChain basicAuthSecurityFilterChain(HttpSecurity http) throws Exception {
         // Define BasicAuth
         return http
+                .csrf(csrf -> csrf.disable())
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers("/api/open/**").permitAll();
+                    request.requestMatchers("/api/users/register").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
