@@ -7,11 +7,16 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    LoginUtilityService loginUtilityService;
 
     // Define SecurityFilterChain for API (Basic Authentication)
     @Bean
@@ -27,5 +32,21 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .build();
+    }
+
+    // Custom User Details Service to manage User instance
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetailsService userDetailsService = (userName) -> {
+            return loginUtilityService.findMatch(userName);
+        };
+
+        return userDetailsService;
+    }
+
+    // Password encoder
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 }

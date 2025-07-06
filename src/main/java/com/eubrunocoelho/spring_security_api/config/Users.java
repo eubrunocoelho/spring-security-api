@@ -18,7 +18,7 @@ public class Users {
 
     String userName;
 
-    //    @Convert(converter = CryptoConverter.class)
+//    @Convert(converter = CryptoConverter.class)
     String password;
 
     Role role;
@@ -66,7 +66,16 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users [id=" + id + ", userName=" + userName + ", password=" + password + ", role=" + role
-                + ", accessTime=" + accessTime + "]";
+        return "Users [id="
+                + id
+                + ", userName="
+                + userName
+                + ", password="
+                + password
+                + ", role="
+                + role
+                + ", accessTime="
+                + accessTime
+                + "]";
     }
 }
