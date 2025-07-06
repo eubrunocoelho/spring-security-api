@@ -24,7 +24,8 @@ public class ApiController {
     public String openApi() {
         String label = String.format(
                 SCREEN_LABEL,
-                "OPEN-API", ""
+                "OPEN-API",
+                ""
         );
         logger.info("Request - " + label);
 

@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 @Table(name = "users")
 @Entity
 public class Users {
-
     public static enum Role {
         ROLE_ADMIN, ROLE_MANAGER, ROLE_STAFF;
     }
