@@ -17,7 +17,7 @@ public class Users {
 
     String userName;
 
-//    @Convert(converter = CryptoConverter.class)
+    @Convert(converter = CryptoConverter.class)
     String password;
 
     Role role;
