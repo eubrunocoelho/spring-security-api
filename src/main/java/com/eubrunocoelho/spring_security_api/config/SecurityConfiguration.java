@@ -34,10 +34,12 @@ public class SecurityConfiguration {
         // JWT based Token Authentication is enabled
         // To enable Basic Authentication, comment addFilterBefore(jwtFilter, ...) and uncomment httpBasic
         return http
+                .csrf(csrf -> csrf.disable())
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers("/api/open/**").permitAll();
                     request.requestMatchers("/api/users/register").permitAll();
+                    request.requestMatchers("/api/users/login").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(
