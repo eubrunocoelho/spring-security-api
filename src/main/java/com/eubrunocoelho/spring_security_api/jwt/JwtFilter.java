@@ -7,6 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -84,6 +89,32 @@ public class JwtFilter extends OncePerRequestFilter {
 
         logger.info("Username found in JWT: " + userName);
 
-        // Get
+        // Get existing authentication instance
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null) {
+            logger.info("Already loggedin: " + userName);
+
+            return;
+        }
+
+        // Authenticate and create authentication instance
+        logger.info("Create authentication instance for {}", userName);
+
+        UserDetails userDetails = loginUtilityService.findMatch(userName);
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        authToken.setDetails(
+                new WebAuthenticationDetailsSource()
+                        .buildDetails(request)
+        );
+
+        // Store authentication token for application to use
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }
